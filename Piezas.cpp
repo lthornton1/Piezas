@@ -55,8 +55,8 @@ Piece Piezas::dropPiece(int column)
   }
 
   for (int i = BOARD_ROWS - 1; i > -1 ; i--) {
-    if (Board[i][column] == Blank){
-      Board[i][column] = turn;
+    if (board[i][column] == Blank){
+      board[i][column] = turn;
       Piece temp = turn;
       if (turn == X) {
         turn = O;
@@ -83,7 +83,7 @@ Piece Piezas::pieceAt(int row, int column)
 {
   if (row < 0 || row >= BOARD_ROWS || column < 0 || column >= BOARD_COLS)
     return Invalid
-  return Board[row][column];
+  return board[row][column];
 }
 
 /**
@@ -102,12 +102,12 @@ Piece Piezas::gameState()
 
   for(int i = 0; i < BOARD_ROWS; i++) {
     int cur = 0;
-    Piece curPiece = Board[0][0];
+    Piece curPiece = board[0][0];
     for(int j = 0; i < BOARD_COLS; j++) {
-      if (Board[i][j] == Blank) {
+      if (board[i][j] == Blank) {
         return Invalid;
       }
-      if (curPiece == Board[i][j]){
+      if (curPiece == board[i][j]){
         cur++;
       } else {
         if (curPiece == X){
@@ -117,7 +117,7 @@ Piece Piezas::gameState()
           if (cur > maxO)
             maxO = cur;
         }
-        curPiece = Board[i][j];
+        curPiece = board[i][j];
         cur = 1;
       }
     }
@@ -125,12 +125,12 @@ Piece Piezas::gameState()
 
   for(int i = 0; i < BOARD_COLS; i++) {
     int cur = 0;
-    Piece curPiece = Board[0][0];
+    Piece curPiece = board[0][0];
     for(int j = 0; i < BOARD_ROWS; j++) {
-      if (Board[i][j] == Blank) {
+      if (board[i][j] == Blank) {
         return Invalid;
       }
-      if (curPiece == Board[i][j]){
+      if (curPiece == board[i][j]){
         cur++;
       } else {
         if (curPiece == X){
@@ -140,7 +140,7 @@ Piece Piezas::gameState()
           if (cur > maxO)
             maxO = cur;
         }
-        curPiece = Board[i][j];
+        curPiece = board[i][j];
         cur = 1;
       }
     }
