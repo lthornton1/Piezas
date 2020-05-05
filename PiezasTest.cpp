@@ -47,7 +47,7 @@ TEST(PiezasTest, dropPieceBoundsCheck)
   obj.dropPiece(0);
   obj.dropPiece(0);
   obj.dropPiece(0);
-  Piece actual = obj.dropPiece(0)
+  Piece actual = obj.dropPiece(0);
   bool check = false;
   if (actual == Invalid)
     check = true;
@@ -93,7 +93,7 @@ TEST(PiezasTest, dropPieceLoseTurnBecauseFull)
   obj.dropPiece(0);
   obj.dropPiece(0);
   obj.dropPiece(0);
-  Piece actual = obj.dropPiece(1)
+  Piece actual = obj.dropPiece(1);
   bool check = false;
   if (actual == O)
     check = true;
