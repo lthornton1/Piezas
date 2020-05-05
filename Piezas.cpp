@@ -2,7 +2,7 @@
 #include <vector>
 /** CLASS Piezas
  * Class for representing a Piezas vertical board, which is roughly based
- * on the game "Connect Four" where pieces are placed in a column and 
+ * on the game "Connect Four" where pieces are placed in a column and
  * fall to the bottom of the column, or on top of other pieces already in
  * that column. For an illustration of the board, see:
  *  https://en.wikipedia.org/wiki/Connect_Four
@@ -17,11 +17,13 @@
 
 
 /**
- * Constructor sets an empty board (default 3 rows, 4 columns) and 
+ * Constructor sets an empty board (default 3 rows, 4 columns) and
  * specifies it is X's turn first
 **/
 Piezas::Piezas()
 {
+  turn = X;
+  board = std::vector<std::vector<Piece>>(BOARD_ROWS,std::vector<Piece>(BOARD_COLS,Blank));
 }
 
 /**
@@ -30,20 +32,48 @@ Piezas::Piezas()
 **/
 void Piezas::reset()
 {
+  board = std::vector<std::vector<Piece>>(BOARD_ROWS,std::vector<Piece>(BOARD_COLS,Blank));
 }
 
 /**
  * Places a piece of the current turn on the board, returns what
- * piece is placed, and toggles which Piece's turn it is. dropPiece does 
+ * piece is placed, and toggles which Piece's turn it is. dropPiece does
  * NOT allow to place a piece in a location where a column is full.
- * In that case, placePiece returns Piece Blank value 
+ * In that case, placePiece returns Piece Blank value
  * Out of bounds coordinates return the Piece Invalid value
  * Trying to drop a piece where it cannot be placed loses the player's turn
-**/ 
+**/
 Piece Piezas::dropPiece(int column)
 {
-    return Blank;
-}
+  if (column < 0 || column >= BOARD_COLS){
+    if (turn == X) {
+      turn = O;
+    } else {
+      turn = X;
+    }
+    return Invalid;
+  }
+
+  for (int i = BOARD_ROWS - 1; i > -1 ; i--) {
+    if (Board[i][column] == Blank){
+      Board[i][column] = turn;
+      Piece temp = turn;
+      if (turn == X) {
+        turn = O;
+      } else {
+        turn = X;
+      }
+      return temp;
+    }
+  }//for
+
+  if (turn == X) {
+    turn = O;
+  } else {
+    turn = X;
+  }
+  return Blank;
+}// dropPiece
 
 /**
  * Returns what piece is at the provided coordinates, or Blank if there
@@ -51,13 +81,15 @@ Piece Piezas::dropPiece(int column)
 **/
 Piece Piezas::pieceAt(int row, int column)
 {
-    return Blank;
+  if (row < 0 || row >= BOARD_ROWS || column < 0 || column >= BOARD_COLS)
+    return Invalid
+  return Board[row][column];
 }
 
 /**
  * Returns which Piece has won, if there is a winner, Invalid if the game
  * is not over, or Blank if the board is filled and no one has won ("tie").
- * For a game to be over, all locations on the board must be filled with X's 
+ * For a game to be over, all locations on the board must be filled with X's
  * and O's (i.e. no remaining Blank spaces). The winner is which player has
  * the most adjacent pieces in a single line. Lines can go either vertically
  * or horizontally. If both X's and O's have the same max number of pieces in a
@@ -65,5 +97,58 @@ Piece Piezas::pieceAt(int row, int column)
 **/
 Piece Piezas::gameState()
 {
-    return Blank;
+  int maxX = 0;
+  int maxO = 0;
+
+  for(int i = 0; i < BOARD_ROWS; i++) {
+    int cur = 0;
+    Piece curPiece = Board[0][0];
+    for(int j = 0; i < BOARD_COLS; j++) {
+      if (Board[i][j] == Blank) {
+        return Invalid;
+      }
+      if (curPiece == Board[i][j]){
+        cur++;
+      } else {
+        if (curPiece == X){
+          if (cur > maxX)
+            maxX = cur;
+        } else {
+          if (cur > maxO)
+            maxO = cur;
+        }
+        curPiece = Board[i][j];
+        cur = 1;
+      }
+    }
+  }
+
+  for(int i = 0; i < BOARD_COLS; i++) {
+    int cur = 0;
+    Piece curPiece = Board[0][0];
+    for(int j = 0; i < BOARD_ROWS; j++) {
+      if (Board[i][j] == Blank) {
+        return Invalid;
+      }
+      if (curPiece == Board[i][j]){
+        cur++;
+      } else {
+        if (curPiece == X){
+          if (cur > maxX)
+            maxX = cur;
+        } else {
+          if (cur > maxO)
+            maxO = cur;
+        }
+        curPiece = Board[i][j];
+        cur = 1;
+      }
+    }
+  }
+
+  if (maxX > maxO)
+    return X;
+  else if (maxO > maxX)
+    return O;
+  return Blank;
 }
