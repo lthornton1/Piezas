@@ -1,7 +1,7 @@
 # Piezas
 [![Coverage Status](https://coveralls.io/repos/github/lthornton1/Piezas/badge.svg?branch=master)](https://coveralls.io/github/lthornton1/Piezas?branch=master)
 
-[![Build Status](https://travis-ci.org/lthornton1/Piezas.svg?branch=master)]
+![Build Status](https://travis-ci.org/lthornton1/Piezas.svg?branch=master)
 
 ## Associated Enumerated Types
 `Piece` has four possible values: `X`,`O`,`Invalid`, and `Blank`
