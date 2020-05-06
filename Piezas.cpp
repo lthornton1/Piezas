@@ -1,5 +1,6 @@
 #include "Piezas.h"
 #include <vector>
+#include<iostream>
 /** CLASS Piezas
  * Class for representing a Piezas vertical board, which is roughly based
  * on the game "Connect Four" where pieces are placed in a column and
@@ -54,7 +55,7 @@ Piece Piezas::dropPiece(int column)
     return Invalid;
   }
 
-  for (int i = BOARD_ROWS - 1; i > -1 ; i--) {
+  for (int i = 0; i <  BOARD_ROWS ; i++) {
     if (board[i][column] == Blank){
       board[i][column] = turn;
       Piece temp = turn;
@@ -102,50 +103,53 @@ Piece Piezas::gameState()
 
   for(int i = 0; i < BOARD_ROWS; i++) {
     int cur = 0;
-    Piece curPiece = board[0][0];
-    for(int j = 0; i < BOARD_COLS; j++) {
+    Piece curPiece = board[i][0];
+    for(int j = 0; j < BOARD_COLS; j++) {
       if (board[i][j] == Blank) {
         return Invalid;
       }
       if (curPiece == board[i][j]){
+        // std::cout<<"Increasing "<<curPiece<<std::endl;
         cur++;
       } else {
-        if (curPiece == X){
-          if (cur > maxX)
-            maxX = cur;
-        } else {
-          if (cur > maxO)
-            maxO = cur;
-        }
         curPiece = board[i][j];
         cur = 1;
+      }
+      if (curPiece == X){
+        if (cur > maxX)
+          maxX = cur;
+      } else {
+        if (cur > maxO)
+          maxO = cur;
       }
     }
   }
 
   for(int i = 0; i < BOARD_COLS; i++) {
     int cur = 0;
-    Piece curPiece = board[0][0];
-    for(int j = 0; i < BOARD_ROWS; j++) {
-      if (board[i][j] == Blank) {
+    Piece curPiece = board[0][i];
+    for(int j = 0; j < BOARD_ROWS; j++) {
+      if (board[j][i] == Blank) {
         return Invalid;
       }
-      if (curPiece == board[i][j]){
+      if (curPiece == board[j][i]){
+        // std::cout<<"Increasing "<<curPiece<<std::endl;
         cur++;
       } else {
-        if (curPiece == X){
-          if (cur > maxX)
-            maxX = cur;
-        } else {
-          if (cur > maxO)
-            maxO = cur;
-        }
-        curPiece = board[i][j];
+        curPiece = board[j][i];
         cur = 1;
+      }
+      if (curPiece == X){
+        if (cur > maxX)
+          maxX = cur;
+      } else {
+        if (cur > maxO)
+          maxO = cur;
       }
     }
   }
 
+  // std::cout<<"O max: "<<maxO<<" X max: "<<maxX<<std::endl;
   if (maxX > maxO)
     return X;
   else if (maxO > maxX)

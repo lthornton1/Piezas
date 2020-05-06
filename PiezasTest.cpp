@@ -49,7 +49,7 @@ TEST(PiezasTest, dropPieceBoundsCheck)
   obj.dropPiece(0);
   Piece actual = obj.dropPiece(0);
   bool check = false;
-  if (actual == Invalid)
+  if (actual == Blank)
     check = true;
 	ASSERT_TRUE(check);
 }
@@ -198,17 +198,39 @@ TEST(PiezasTest, gameStateEmpty)
 	ASSERT_TRUE(check);
 }
 
-TEST(PiezasTest, gameStateTieRow)
+TEST(PiezasTest, gameStateXWins)
 {
   Piezas obj;
   for(int i = 0; i < BOARD_ROWS; i++) {
     for(int j = 0; j < BOARD_COLS; j++) {
       obj.dropPiece(j);
+      obj.dropPiece(-1);
+    }
+  }
+  // for(int i = 0; i < BOARD_ROWS; i++) {
+  //   for(int j = 0; j < BOARD_COLS; j++) {
+  //     std::cout<<obj.pieceAt(i,j)<<" ";
+  //   }
+  //   std::cout<<std::endl;
+  // }
+  // std::cout<<obj.gameState()<<std::endl;
+  bool check = false;
+  if (obj.gameState() == X)
+    check = true;
+	ASSERT_TRUE(check);
+}
+
+TEST(PiezasTest, gameStateOWins)
+{
+  Piezas obj;
+  for(int i = 0; i < BOARD_ROWS; i++) {
+    for(int j = 0; j < BOARD_COLS; j++) {
+      obj.dropPiece(-1);
       obj.dropPiece(j);
     }
   }
   bool check = false;
-  if (obj.gameState() == Blank)
+  if (obj.gameState() == O)
     check = true;
 	ASSERT_TRUE(check);
 }
@@ -227,32 +249,17 @@ TEST(PiezasTest, gameStateTieCol)
 	ASSERT_TRUE(check);
 }
 
-TEST(PiezasTest, gameStateXWins)
+TEST(PiezasTest, gameStateTieRow)
 {
   Piezas obj;
   for(int i = 0; i < BOARD_ROWS; i++) {
     for(int j = 0; j < BOARD_COLS; j++) {
       obj.dropPiece(j);
-      obj.dropPiece(-1);
-    }
-  }
-  bool check = false;
-  if (obj.gameState() == X)
-    check = true;
-	ASSERT_TRUE(check);
-}
-
-TEST(PiezasTest, gameStateOWins)
-{
-  Piezas obj;
-  for(int i = 0; i < BOARD_ROWS; i++) {
-    for(int j = 0; j < BOARD_COLS; j++) {
-      obj.dropPiece(-1);
       obj.dropPiece(j);
     }
   }
   bool check = false;
-  if (obj.gameState() == O)
+  if (obj.gameState() == Blank)
     check = true;
 	ASSERT_TRUE(check);
 }
