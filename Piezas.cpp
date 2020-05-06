@@ -1,6 +1,5 @@
 #include "Piezas.h"
 #include <vector>
-#include<iostream>
 /** CLASS Piezas
  * Class for representing a Piezas vertical board, which is roughly based
  * on the game "Connect Four" where pieces are placed in a column and
@@ -109,7 +108,6 @@ Piece Piezas::gameState()
         return Invalid;
       }
       if (curPiece == board[i][j]){
-        // std::cout<<"Increasing "<<curPiece<<std::endl;
         cur++;
       } else {
         curPiece = board[i][j];
@@ -130,7 +128,6 @@ Piece Piezas::gameState()
     Piece curPiece = board[0][i];
     for(int j = 0; j < BOARD_ROWS; j++) {
       if (curPiece == board[j][i]){
-        // std::cout<<"Increasing "<<curPiece<<std::endl;
         cur++;
       } else {
         curPiece = board[j][i];
@@ -145,8 +142,7 @@ Piece Piezas::gameState()
       }
     }
   }
-
-  // std::cout<<"O max: "<<maxO<<" X max: "<<maxX<<std::endl;
+  
   if (maxX > maxO)
     return X;
   else if (maxO > maxX)
