@@ -129,9 +129,6 @@ Piece Piezas::gameState()
     int cur = 0;
     Piece curPiece = board[0][i];
     for(int j = 0; j < BOARD_ROWS; j++) {
-      if (board[j][i] == Blank) {
-        return Invalid;
-      }
       if (curPiece == board[j][i]){
         // std::cout<<"Increasing "<<curPiece<<std::endl;
         cur++;
