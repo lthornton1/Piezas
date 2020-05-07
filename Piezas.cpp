@@ -45,33 +45,30 @@ void Piezas::reset()
 **/
 Piece Piezas::dropPiece(int column)
 {
-  if (column < 0 || column >= BOARD_COLS){
-    if (turn == X) {
-      turn = O;
-    } else {
-      turn = X;
-    }
-    return Invalid;
-  }
-
-  for (int i = 0; i <  BOARD_ROWS ; i++) {
-    if (board[i][column] == Blank){
-      board[i][column] = turn;
-      Piece temp = turn;
-      if (turn == X) {
-        turn = O;
-      } else {
-        turn = X;
-      }
-      return temp;
-    }
-  }//for
-
+  //Since we have to flip the turn regardless of what happens, we store
+  //the current turn in temp so we can use it, and then flip the turn
+  Piece temp = turn;
   if (turn == X) {
     turn = O;
   } else {
     turn = X;
   }
+
+  //If input was out of bounds return Invalid
+  if (column < 0 || column >= BOARD_COLS){
+    return Invalid;
+  }
+
+  //Loop bottom to top of board, when we find our first blank,
+  //place piece and return the piece that was placed
+  for (int i = 0; i <  BOARD_ROWS ; i++) {
+    if (board[i][column] == Blank){
+      board[i][column] = temp;
+      return temp;
+    }
+  }//for
+
+  //If we never found a blank space because coulmn was full, return blank
   return Blank;
 }// dropPiece
 
@@ -97,55 +94,73 @@ Piece Piezas::pieceAt(int row, int column)
 **/
 Piece Piezas::gameState()
 {
-  int maxX = 0;
-  int maxO = 0;
+  //using these two small arrays we can drastically reduce our
+  //cyclomatic complexity by using index of ox to verify we are
+  //modifying the correct item, essentially forces X = 1 and O = 0
+  //to make the logic simpler, withour having to use a size 256 array
+  int max[2] = {};
+  char ox[2] = {'O','X'};
 
+  //Find the maximums for rows
   for(int i = 0; i < BOARD_ROWS; i++) {
-    int cur = 0;
-    Piece curPiece = board[i][0];
-    for(int j = 0; j < BOARD_COLS; j++) {
-      if (board[i][j] == Blank) {
-        return Invalid;
-      }
-      if (curPiece == board[i][j]){
-        cur++;
-      } else {
-        curPiece = board[i][j];
-        cur = 1;
-      }
-      if (curPiece == X){
-        if (cur > maxX)
-          maxX = cur;
-      } else {
-        if (cur > maxO)
-          maxO = cur;
-      }
-    }
-  }
 
-  for(int i = 0; i < BOARD_COLS; i++) {
-    int cur = 0;
-    Piece curPiece = board[0][i];
-    for(int j = 0; j < BOARD_ROWS; j++) {
-      if (curPiece == board[j][i]){
-        cur++;
-      } else {
-        curPiece = board[j][i];
-        cur = 1;
-      }
-      if (curPiece == X){
-        if (cur > maxX)
-          maxX = cur;
-      } else {
-        if (cur > maxO)
-          maxO = cur;
-      }
+    //If anything in the top row is blank return Invalid
+    //Since we fill bottom to top, if top is full what is
+    //below is necessarily filled
+    if (board[i][BOARD_ROWS-1] == Blank) {
+      return Invalid;
     }
-  }
-  
-  if (maxX > maxO)
+
+    int cur = 0;
+    int curIndex = 0;
+
+    for(int j = 0; j < BOARD_COLS; j++) {
+
+      if (ox[curIndex] == board[i][j]){
+        cur++;
+      }
+
+      //Since curIndex can now only be one or 0 we can treat it like a bit
+      //that we can flip to change which piece we are currently looking at
+      //and since we for the Invalid check outside the loop we dont have to
+      //worry about blank squares for the given iteration
+      else {
+       curIndex = curIndex ^ 1;
+       cur = 1;
+     }
+
+     //Rather than having 2 seperate variables we can use this array to always
+     //do the correct check regardless of which piece type were looking at
+     if (cur > max[curIndex])
+       max[curIndex] = cur;
+
+    }
+  }//For row max
+
+  //Find the maximums for columns
+  for(int i = 0; i < BOARD_COLS; i++) {
+
+    int cur = 0;
+    int curIndex = 1;
+
+    for(int j = 0; j < BOARD_ROWS; j++) {
+      if (ox[curIndex] == board[j][i]){
+        cur++;
+      }
+      else {
+       curIndex = curIndex ^ 1;
+       cur = 1;
+     }
+     if (cur > max[curIndex])
+       max[curIndex] = cur;
+    }
+  }//for column max
+
+
+  if (max[0] < max[1])
     return X;
-  else if (maxO > maxX)
+  else if (max[0] > max[1])
     return O;
   return Blank;
-}
+
+}//gameState
